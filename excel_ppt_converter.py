@@ -77,8 +77,13 @@ class CoreLogic:
         
         # [Error Handling] Serial/TCP/API 등 외부 통신 시 예외 처리를 위한 견고한 Try-Except 블록
         try:
+            # 사용할 Gemini API Key 지정 (환경변수에서 로드하여 깃허브 노출 방지)
+            api_key = os.environ.get("GEMINI_API_KEY")
+            if not api_key:
+                raise Exception("GEMINI_API_KEY 환경 변수가 설정되지 않았습니다. API 키를 시스템 환경 변수에 추가해주세요.")
+
             # 사용할 Gemini 모델 설정 및 호출 (신규 genai 패키지 방식)
-            client = genai.Client(api_key='AIzaSyBlUpNhQuSdstC1o4PrFt0uFDqj9zXOvCc')
+            client = genai.Client(api_key=api_key)
             response = client.models.generate_content(
                 model='gemini-2.5-flash',
                 contents=api_prompt,
